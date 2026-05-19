@@ -5,14 +5,14 @@ spring:
     google:
       genai:
         api-key: ${GEMINI_API_KEY}
-  web:
-    error:
-      include-stacktrace:
   datasource:
     url:
     username:
     password:
     driver-class-name:
+server:
+  error:
+    include-stacktrace: always
 # MYBatis
 mybatis:
   mapper-locations:
