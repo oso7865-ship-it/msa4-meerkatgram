@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: msa4-meerkatgram
+  ai:
+    google:
+      genai:
+        api-key: ${GEMINI_API_KEY}
