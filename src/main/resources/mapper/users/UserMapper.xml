@@ -21,10 +21,20 @@
     <select id="findByPk" resultMap="UserResultMap">
         SELECT
             *
-        FROM Users
+        FROM users
         WHERE
             id = #{id}
         AND
+            deleted_at IS NULL
+    </select>
+
+    <select id="findByEmail" resultMap="UserResultMap">
+        SELECT
+            *
+        FROM users
+        WHERE
+            email = #{email}
+          AND
             deleted_at IS NULL
     </select>
 

@@ -31,6 +31,7 @@ public class JwtProvider {
                    .issuedAt(now) // 토큰 발급 시간
                    .expiration(new Date(now.getTime() + ttl)) // 토큰 만료 시간
                    .claim("role", user.getRole()) // private claim 설정
+                   .signWith(secretKey) // 시그니처 작성
                    .compact();
     }
 
