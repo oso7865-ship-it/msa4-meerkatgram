@@ -5,6 +5,8 @@ import com.msa4meerkatgram.global.errors.custom.NotRegisteredException;
 import com.msa4meerkatgram.global.responses.GlobalResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -78,4 +80,27 @@ public class GlobalExceptionHandler {
                            .build()
         );
     }
+
+        @ExceptionHandler(AuthenticationException.class)
+        public ResponseEntity<GlobalResponse<String>> authenticationHandle(AuthenticationException e) {
+            return ResponseEntity.status(401).body(
+                GlobalResponse.<String>builder()
+                    .code("E02")
+                    .message("UNAUTHENTICATED_ERROR")
+                    .data("로그인이 필요한 서비스입니다.")
+                    .build()
+            );
+        }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<GlobalResponse<String>> accessDeniedHandle(AccessDeniedException e) {
+        return ResponseEntity.status(403).body(
+            GlobalResponse.<String>builder()
+                .code("E03")
+                .message("UNAUTHORIZED_ERROR")
+                .data("로그인이 필요한 서비스입니다.")
+                .build()
+        );
+    }
+
 }

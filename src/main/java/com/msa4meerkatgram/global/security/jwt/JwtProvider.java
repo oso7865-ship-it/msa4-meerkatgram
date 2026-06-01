@@ -49,13 +49,28 @@ public class JwtProvider {
     public String generateRefreshToken(User user) {
         return this.generateToken(user, jwtConfig.refreshTokenExpiry());
     }
-    
+
     // 쿠키에서 리프레시 토큰 추출
     public Optional<String> extractRefreshToken(HttpServletRequest request) {
         return cookieManager.getCookie(request, jwtConfig.refreshTokenCookieName())
                 .map(Cookie::getValue);
     }
-    
+
+    /**
+     * 헤더에서 베어러토큰(엑세스토큰) 추출
+     * @param request 리퀘스트
+     * @return Optional 엑세스 토큰
+     */
+    public Optional<String> extractAccessToken(HttpServletRequest request){
+        String bearerToken = request.getHeader(jwtConfig.headerKey());
+
+        if (bearerToken == null || !bearerToken.startsWith(jwtConfig.scheme())) {
+            return Optional.empty();
+        }
+
+        return Optional.of(bearerToken.substring(jwtConfig.scheme().length()).trim());
+    }
+
     // 토큰 검증 및 클레임 추출
     public Claims extractClaims(String token) {
         try {
@@ -74,10 +89,10 @@ public class JwtProvider {
             throw new InvalidTokenException("토큰 검증에 실패했습니다.");
         }
     }
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
 }

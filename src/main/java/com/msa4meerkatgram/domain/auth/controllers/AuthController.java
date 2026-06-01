@@ -4,11 +4,13 @@ import com.msa4meerkatgram.domain.auth.requests.LoginRequest;
 import com.msa4meerkatgram.domain.auth.responses.AuthRes;
 import com.msa4meerkatgram.domain.auth.services.AuthService;
 import com.msa4meerkatgram.global.responses.GlobalResponse;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,4 +49,20 @@ public class AuthController {
                         .build()
         );
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<GlobalResponse<String>> logout(
+        HttpServletResponse response
+        , @AuthenticationPrincipal Claims claims
+    ) {
+        authService.logout(response, Long.parseLong(claims.getSubject()));
+
+        return ResponseEntity.status(200).body(
+            GlobalResponse.<String>builder()
+                .code("00")
+                .message("로그아웃 완료")
+                .build()
+        );
+    }
+
 }
