@@ -22,9 +22,9 @@ public class MeerkatChatController {
 
         // 제미나이에게 질문을 던지고, 답변 텍스트만 쏙 뽑아옵니다.
         String response = chatClient.prompt()
-                              .user(message)
-                              .call()
-                              .content();
+              .user(message)
+              .call()
+              .content();
 
         return "🤖 제미나이의 답변: " + response;
     }

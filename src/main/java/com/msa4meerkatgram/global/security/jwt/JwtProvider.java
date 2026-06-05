@@ -30,16 +30,16 @@ public class JwtProvider {
 
 
         return Jwts.builder()
-                   .header() // 헤더 셋팅하겠다.
-                   .type(jwtConfig.type()) // 토큰 유형 설정
-                   .and() // 추가 연결
-                   .subject(String.valueOf(user.getId())) // subject: 유저를 특정하는 Id 셋팅에 주로 사용
-                   .issuer(jwtConfig.issuer()) // 토큰 발급자
-                   .issuedAt(now) // 토큰 발급 시간
-                   .expiration(new Date(now.getTime() + ttl)) // 토큰 만료 시간
-                   .claim("role", user.getRole()) // private claim 설정
-                   .signWith(secretKey) // 시그니처 작성
-                   .compact();
+           .header() // 헤더 셋팅하겠다.
+           .type(jwtConfig.type()) // 토큰 유형 설정
+           .and() // 추가 연결
+           .subject(String.valueOf(user.getId())) // subject: 유저를 특정하는 Id 셋팅에 주로 사용
+           .issuer(jwtConfig.issuer()) // 토큰 발급자
+           .issuedAt(now) // 토큰 발급 시간
+           .expiration(new Date(now.getTime() + ttl)) // 토큰 만료 시간
+           .claim("role", user.getRole()) // private claim 설정
+           .signWith(secretKey) // 시그니처 작성
+           .compact();
     }
 
     public String generateAccessToken(User user) {
@@ -75,10 +75,10 @@ public class JwtProvider {
     public Claims extractClaims(String token) {
         try {
             return Jwts.parser()
-                    .verifyWith(this.secretKey)
-                    .build()
-                    .parseSignedClaims(token)
-                    .getPayload();
+                .verifyWith(this.secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
         } catch (ExpiredJwtException e) {
             throw new InvalidTokenException("토큰이 만료되었습니다.");
         } catch (UnsupportedJwtException e) {

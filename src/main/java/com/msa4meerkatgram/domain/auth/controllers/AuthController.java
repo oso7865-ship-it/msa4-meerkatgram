@@ -1,6 +1,7 @@
 package com.msa4meerkatgram.domain.auth.controllers;
 
 import com.msa4meerkatgram.domain.auth.requests.LoginRequest;
+import com.msa4meerkatgram.domain.auth.requests.RegistrationReq;
 import com.msa4meerkatgram.domain.auth.responses.AuthRes;
 import com.msa4meerkatgram.domain.auth.services.AuthService;
 import com.msa4meerkatgram.global.responses.GlobalResponse;
@@ -28,11 +29,11 @@ public class AuthController {
             , HttpServletResponse response
     ){
         return ResponseEntity.status(200).body(
-                GlobalResponse.<AuthRes>builder()
-                        .code("00")
-                        .message("로그인 성공")
-                        .data(authService.login(response, loginRequest))
-                        .build()
+            GlobalResponse.<AuthRes>builder()
+                .code("00")
+                .message("로그인 성공")
+                .data(authService.login(response, loginRequest))
+                .build()
         );
     }
 
@@ -42,11 +43,11 @@ public class AuthController {
             ,HttpServletResponse response
     ) {
         return ResponseEntity.status(200).body(
-                GlobalResponse.<AuthRes>builder()
-                        .code("00")
-                        .message("토큰 재발급 완료")
-                        .data(authService.reissue(request, response))
-                        .build()
+            GlobalResponse.<AuthRes>builder()
+                .code("00")
+                .message("토큰 재발급 완료")
+                .data(authService.reissue(request, response))
+                .build()
         );
     }
 
@@ -61,6 +62,19 @@ public class AuthController {
             GlobalResponse.<String>builder()
                 .code("00")
                 .message("로그아웃 완료")
+                .build()
+        );
+    }
+    @PostMapping("/registration")
+    public ResponseEntity<GlobalResponse<String>> registration(
+        @Valid @RequestBody RegistrationReq registrationReq
+    ) {
+        authService.registration(registrationReq);
+
+        return ResponseEntity.status(200).body(
+            GlobalResponse.<String>builder()
+                .code("00")
+                .message("회원가입 완료")
                 .build()
         );
     }

@@ -1,12 +1,15 @@
 package com.msa4meerkatgram.domain.post.controllers;
 
+import com.msa4meerkatgram.domain.post.entities.Post;
 import com.msa4meerkatgram.domain.post.requests.PostIndexRequest;
 import com.msa4meerkatgram.domain.post.responses.PostIndexResponse;
 import com.msa4meerkatgram.domain.post.services.PostService;
 import com.msa4meerkatgram.global.responses.GlobalResponse;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,10 +24,25 @@ public class PostController {
         PostIndexResponse postIndexResponse = postService.index(postIndexRequest);
         return ResponseEntity.status(200).body(
             GlobalResponse.<PostIndexResponse>builder()
-                   .code("00")
-                   .message("정상처리")
-                   .data(postIndexResponse)
-                   .build()
+               .code("00")
+               .message("정상처리")
+               .data(postIndexResponse)
+               .build()
+        );
+    }
+
+    @GetMapping("/posts/{id}")
+    public ResponseEntity<GlobalResponse<Post>> show(
+        @Min(value = 1, message = "1이상 숫자만 허용합니다.") @PathVariable long id
+    ) {
+        Post result = postService.show(id);
+
+        return ResponseEntity.status(200).body(
+            GlobalResponse.<Post>builder()
+                .code("00")
+                .message("정상처리")
+                .data(result)
+                .build()
         );
     }
 }

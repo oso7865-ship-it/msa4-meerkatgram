@@ -24,8 +24,8 @@ public class CookieManager {
 
         // name에 맞는 쿠키 획득
         return Arrays.stream(request.getCookies())
-                .filter(cookie -> cookie.getName().equals(name))
-                .findFirst();
+            .filter(cookie -> cookie.getName().equals(name))
+            .findFirst();
     }
 
     // 쿠키 생성 메소드

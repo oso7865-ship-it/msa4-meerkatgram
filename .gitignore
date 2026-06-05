@@ -7,6 +7,7 @@ build/
 application.yaml
 
 ### STS ###
+storage/
 .apt_generated
 .classpath
 .factorypath
