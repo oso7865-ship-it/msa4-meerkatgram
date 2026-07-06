@@ -50,4 +50,29 @@
             deleted_at IS NULL
         AND user_id = #{userId}
     </select>
+    
+    <insert id="postCreate"
+            useGeneratedKeys="true"
+            keyProperty="id"
+    >
+        INSERT INTO posts(
+            user_id,
+            content,
+            image,
+            created_at
+        ) VALUES (
+            #{userId},
+            #{content},
+            #{image},
+            NOW()
+                         );
+    </insert>
+    
+    <update id="deletePost">
+        UPDATE posts
+        SET deleted_at = NOW()
+        WHERE id = #{id}
+          AND user_id = #{userId}
+          AND deleted_at IS NULL
+    </update>
 </mapper>

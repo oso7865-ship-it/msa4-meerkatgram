@@ -54,10 +54,32 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidTokenException.class)
     public ResponseEntity<GlobalResponse<String>> invalidTokenHandle(InvalidTokenException e) {
-        return ResponseEntity.status(400).body(
+        return ResponseEntity.status(401).body(
             GlobalResponse.<String>builder()
                 .code("E04")
                 .message("토큰 이상")
+                .data(e.getMessage())
+                .build()
+        );
+    }
+
+    @ExceptionHandler(InvalidPostCreateException.class)
+    public ResponseEntity<GlobalResponse<String>> invalidPostCreateHandle(InvalidPostCreateException e) {
+        return ResponseEntity.status(400).body(
+            GlobalResponse.<String>builder()
+                .code("E05")
+                .message("게시글 안에 내용이 비어있음")
+                .data(e.getMessage())
+                .build()
+        );
+    }
+
+    @ExceptionHandler(PostDeleteException.class)
+    public ResponseEntity<GlobalResponse<String>> postDeleteHandle(PostDeleteException e) {
+        return ResponseEntity.status(403).body(
+            GlobalResponse.<String>builder()
+                .code("E06")
+                .message("게시글의 권한을 확인해 주세요")
                 .data(e.getMessage())
                 .build()
         );

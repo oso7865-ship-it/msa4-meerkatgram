@@ -1,17 +1,18 @@
 package com.msa4meerkatgram.domain.post.controllers;
 
-import com.msa4meerkatgram.domain.post.entities.Post;
+import com.msa4meerkatgram.domain.post.requests.PostCreateReq;
 import com.msa4meerkatgram.domain.post.requests.PostIndexRequest;
 import com.msa4meerkatgram.domain.post.responses.PostIndexResponse;
+import com.msa4meerkatgram.domain.post.responses.PostShowResponse;
 import com.msa4meerkatgram.domain.post.services.PostService;
 import com.msa4meerkatgram.global.responses.GlobalResponse;
+import io.jsonwebtoken.Claims;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @RestController
@@ -32,17 +33,57 @@ public class PostController {
     }
 
     @GetMapping("/posts/{id}")
-    public ResponseEntity<GlobalResponse<Post>> show(
-        @Min(value = 1, message = "1이상 숫자만 허용합니다.") @PathVariable long id
+    public ResponseEntity<GlobalResponse<PostShowResponse>> show(
+        @Min(value = 1, message = "1이상 숫자만 허용합니다.") @PathVariable long id,
+        @AuthenticationPrincipal Claims claims
     ) {
-        Post result = postService.show(id);
+        long userId = Long.parseLong(claims.getSubject());
+
+        PostShowResponse result = postService.show(id, userId);
 
         return ResponseEntity.status(200).body(
-            GlobalResponse.<Post>builder()
+            GlobalResponse.<PostShowResponse>builder()
                 .code("00")
                 .message("정상처리")
                 .data(result)
                 .build()
         );
     }
+
+    @PostMapping("/postCreate")
+    public ResponseEntity<GlobalResponse<PostCreateReq>> postCreate(
+        @RequestParam String content,
+        @RequestParam MultipartFile file,
+        @AuthenticationPrincipal Claims claims
+    ) {
+        long userId = Long.parseLong(claims.getSubject());
+
+        postService.postCreates(content, userId, file);
+
+        return ResponseEntity.ok(
+            GlobalResponse.<PostCreateReq>builder()
+                .code("00")
+                .message("정상처리")
+                .data(null)
+                .build()
+        );
+    }
+    @DeleteMapping("/postDelete/{postId}")
+    public ResponseEntity<GlobalResponse<Void>> deletePost(
+        @PathVariable long postId,
+        @AuthenticationPrincipal Claims claims
+    ) {
+        long userId = Long.parseLong(claims.getSubject());
+
+        postService.deletePost(postId, userId);
+
+        return ResponseEntity.ok(
+            GlobalResponse.<Void>builder()
+                .code("00")
+                .message("정상처리")
+                .data(null)
+                .build()
+        );
+    }
+
 }
