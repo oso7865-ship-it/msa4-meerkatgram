@@ -3,13 +3,13 @@ package com.msa4meerkatgram.domain.post.services;
 import com.msa4meerkatgram.domain.file.responses.FileRes;
 import com.msa4meerkatgram.domain.file.service.FileService;
 import com.msa4meerkatgram.domain.post.entities.Like;
-import com.msa4meerkatgram.domain.post.entities.Post;
+import com.msa4meerkatgram.domain.post.entities.PostMybatis;
 import com.msa4meerkatgram.domain.post.mapper.LikeMapper;
 import com.msa4meerkatgram.domain.post.mapper.PostMapper;
 import com.msa4meerkatgram.domain.post.requests.PostIndexRequest;
 import com.msa4meerkatgram.domain.post.responses.PostIndexResponse;
 import com.msa4meerkatgram.domain.post.responses.PostShowResponse;
-import com.msa4meerkatgram.domain.user.entities.User;
+import com.msa4meerkatgram.domain.user.entities.UserMybatis;
 import com.msa4meerkatgram.domain.user.mapper.UserMapper;
 import com.msa4meerkatgram.global.errors.custom.DeletedRecordException;
 import com.msa4meerkatgram.global.errors.custom.InvalidPostCreateException;
@@ -32,7 +32,7 @@ public class PostService {
     public PostIndexResponse index(PostIndexRequest postIndexRequest) {
         int offset = (postIndexRequest.page() - 1) * postIndexRequest.limit();
         // 특정 페이지 게시글 조회
-        List<Post> posts = postMapper.getPagination(postIndexRequest.limit(), offset);
+        List<PostMybatis> posts = postMapper.getPagination(postIndexRequest.limit(), offset);
 
         // 토탈 획득
         long total = postMapper.getTotal();
@@ -47,7 +47,7 @@ public class PostService {
     }
 
     public PostShowResponse show(long id, long userId) {
-        Post post = postMapper.findByPk(id);
+        PostMybatis post = postMapper.findByPk(id);
 
         if (post == null) {
             throw new DeletedRecordException("이미 삭제된 게시글입니다.");
@@ -70,7 +70,7 @@ public class PostService {
 
     @Transactional(rollbackFor = Exception.class)
     public void postCreates(String content, long userId, MultipartFile file) {
-        User user = userMapper.findByPk(userId);
+        UserMybatis user = userMapper.findByPk(userId);
 
         if (user == null) {
             throw new RuntimeException("접근방법이 올바르지 않습니다.");
@@ -87,7 +87,7 @@ public class PostService {
         FileRes fileRes = fileService.storePosts(file);
         String image = fileRes.fileUri();
 
-        Post post = Post.builder()
+        PostMybatis post = PostMybatis.builder()
                         .userId(userId)
                         .content(content)
                         .image(image)
@@ -98,7 +98,7 @@ public class PostService {
     }
     @Transactional(rollbackFor = Exception.class)
     public void deletePost(long id, long userId) {
-        User user = userMapper.findByPk(userId);
+        UserMybatis user = userMapper.findByPk(userId);
 
         if (user == null) {
             throw new RuntimeException("접근방법이 올바르지 않습니다.");
@@ -113,7 +113,7 @@ public class PostService {
 
     public PostShowResponse getPost(long id) {
 
-        Post post = postMapper.findByPk(id);
+        PostMybatis post = postMapper.findByPk(id);
 
         long likeCount = likeMapper.countLikesByPostId(id);
 

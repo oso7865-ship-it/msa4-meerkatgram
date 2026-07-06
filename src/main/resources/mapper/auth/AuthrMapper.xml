@@ -5,7 +5,7 @@
 
 <mapper namespace="com.msa4meerkatgram.domain.auth.mapper.AuthMapper">
     <update id="updateRefreshToken"
-            parameterType="com.msa4meerkatgram.domain.user.entities.User"
+            parameterType="com.msa4meerkatgram.domain.user.entities.UserMybatis"
             >
         UPDATE users
         SET
@@ -16,7 +16,7 @@
     </update>
     
     <insert id="create"
-            parameterType="com.msa4meerkatgram.domain.user.entities.User"
+            parameterType="com.msa4meerkatgram.domain.user.entities.UserMybatis"
             useGeneratedKeys="true"
             keyProperty="id"
     >
