@@ -6,6 +6,9 @@ spring:
     url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:meerkatgram}
     username: ${DB_USER:root}
     password: ${DB_PASSWORD:msa505}
+    hikari:
+      maximum-pool-size: 10
+      connection-timeout: 30000
   servlet:
     multipart:
       max-file-size: 10MB
@@ -13,6 +16,29 @@ spring:
   output:
     ansi:
       enabled: ALWAYS
+
+  jpa:
+    hibernate:
+      # 서버를 재시작 할 때, DB 스키마를 어떻게 관리할지 설정
+      # `none` 이외의 설정 값을 사용시, DB 스키마가 초기화 되거나 수정되므로 주의
+      ddl-auto: none
+    # 실행되는 SQL을 콘솔에 출력 여부
+    show-sql: true
+    properties:
+      hibernate:
+        # SQL을 보기 좋게 포맷하여 출력
+        format_sql: true
+    # 데이터 소스 초기화 지연 설정
+      # - true로 설정 시, Spring 컨텍스트가 완전히 로드된 후에 어플리케이션의 DataSource 초기화
+    defer-datasource-initialization: true
+  sql:
+    init:
+      # DB 초기화 파일의 위치 설정
+      data-locations: classpath*:dummy/*.sql
+      # DB 초기화 파일이 실행될 시점을 설정
+      mode: always
+      # 사용할 DB 플랫폼 설정
+      platform: all
 
 mybatis:
   mapper-locations: classpath:mapper/**/*Mapper.xml
