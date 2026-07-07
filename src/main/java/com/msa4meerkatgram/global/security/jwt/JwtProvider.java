@@ -1,6 +1,6 @@
 package com.msa4meerkatgram.global.security.jwt;
 
-import com.msa4meerkatgram.domain.user.entities.UserMybatis;
+import com.msa4meerkatgram.domain.user.entities.User;
 import com.msa4meerkatgram.global.errors.custom.InvalidTokenException;
 import com.msa4meerkatgram.global.security.cookie.CookieManager;
 import io.jsonwebtoken.*;
@@ -25,7 +25,7 @@ public class JwtProvider {
         this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtConfig.secret()));
         this.cookieManager = cookieManager;
     }
-    private String generateToken(UserMybatis user, long ttl) {
+    private String generateToken(User user, long ttl) {
         Date now = new Date();
 
 
@@ -42,11 +42,11 @@ public class JwtProvider {
            .compact();
     }
 
-    public String generateAccessToken(UserMybatis user) {
+    public String generateAccessToken(User user) {
         return this.generateToken(user, jwtConfig.accessTokenExpiry());
     }
 
-    public String generateRefreshToken(UserMybatis user) {
+    public String generateRefreshToken(User user) {
         return this.generateToken(user, jwtConfig.refreshTokenExpiry());
     }
 

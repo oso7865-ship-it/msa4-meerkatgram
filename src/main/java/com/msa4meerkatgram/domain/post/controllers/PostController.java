@@ -1,9 +1,7 @@
 package com.msa4meerkatgram.domain.post.controllers;
 
 import com.msa4meerkatgram.domain.post.requests.PostCreateReq;
-import com.msa4meerkatgram.domain.post.requests.PostIndexRequest;
-import com.msa4meerkatgram.domain.post.responses.PostIndexResponse;
-import com.msa4meerkatgram.domain.post.responses.PostShowResponse;
+import com.msa4meerkatgram.domain.post.responses.PostWithUserRes;
 import com.msa4meerkatgram.domain.post.services.PostService;
 import com.msa4meerkatgram.global.responses.GlobalResponse;
 import io.jsonwebtoken.Claims;
@@ -20,29 +18,26 @@ import org.springframework.web.multipart.MultipartFile;
 public class PostController {
     private final PostService postService;
 
-    @GetMapping("/posts")
-    public ResponseEntity<GlobalResponse<PostIndexResponse>> index(PostIndexRequest postIndexRequest) {
-        PostIndexResponse postIndexResponse = postService.index(postIndexRequest);
-        return ResponseEntity.status(200).body(
-            GlobalResponse.<PostIndexResponse>builder()
-               .code("00")
-               .message("정상처리")
-               .data(postIndexResponse)
-               .build()
-        );
-    }
+    // @GetMapping("/posts")
+    // public ResponseEntity<GlobalResponse<PostIndexResponse>> index(PostIndexRequest postIndexRequest) {
+    //     PostIndexResponse postIndexResponse = postService.index(postIndexRequest);
+    //     return ResponseEntity.status(200).body(
+    //         GlobalResponse.<PostIndexResponse>builder()
+    //            .code("00")
+    //            .message("정상처리")
+    //            .data(postIndexResponse)
+    //            .build()
+    //     );
+    // }
 
     @GetMapping("/posts/{id}")
-    public ResponseEntity<GlobalResponse<PostShowResponse>> show(
-        @Min(value = 1, message = "1이상 숫자만 허용합니다.") @PathVariable long id,
-        @AuthenticationPrincipal Claims claims
+    public ResponseEntity<GlobalResponse<PostWithUserRes>> show(
+        @Min(value = 1, message = "1이상 숫자만 허용합니다.")
+        @PathVariable long id
     ) {
-        long userId = Long.parseLong(claims.getSubject());
-
-        PostShowResponse result = postService.show(id, userId);
-
+        PostWithUserRes result = postService.show(id);
         return ResponseEntity.status(200).body(
-            GlobalResponse.<PostShowResponse>builder()
+            GlobalResponse.<PostWithUserRes>builder()
                 .code("00")
                 .message("정상처리")
                 .data(result)

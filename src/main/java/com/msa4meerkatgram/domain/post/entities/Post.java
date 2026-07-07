@@ -26,9 +26,6 @@ public class Post {
     @Column(name = "id", columnDefinition = "BIGINT UNSIGNED")
     private Long id;
 
-    @Column(name = "user_id", columnDefinition = "BIGINT UNSIGNED")
-    private Long userId;
-
     @Column(name = "content", nullable = false, length = 200)
     private String content;
 
