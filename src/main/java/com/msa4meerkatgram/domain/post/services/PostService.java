@@ -2,7 +2,7 @@ package com.msa4meerkatgram.domain.post.services;
 
 import com.msa4meerkatgram.domain.file.responses.FileRes;
 import com.msa4meerkatgram.domain.file.service.FileService;
-import com.msa4meerkatgram.domain.post.entities.Like;
+import com.msa4meerkatgram.domain.post.entities.LikeMyBatis;
 import com.msa4meerkatgram.domain.post.entities.PostMybatis;
 import com.msa4meerkatgram.domain.post.mapper.LikeMapper;
 import com.msa4meerkatgram.domain.post.mapper.PostMapper;
@@ -55,7 +55,7 @@ public class PostService {
 
         long likeCount = likeMapper.countLikesByPostId(id);
 
-        Like like = likeMapper.findByUserIdAndPostId(userId, id);
+        LikeMyBatis like = likeMapper.findByUserIdAndPostId(userId, id);
         boolean liked = like != null && like.getDeletedAt() == null;
 
         return PostShowResponse.builder()

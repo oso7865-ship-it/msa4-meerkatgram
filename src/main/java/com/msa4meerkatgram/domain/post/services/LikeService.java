@@ -1,6 +1,6 @@
 package com.msa4meerkatgram.domain.post.services;
 
-import com.msa4meerkatgram.domain.post.entities.Like;
+import com.msa4meerkatgram.domain.post.entities.LikeMyBatis;
 import com.msa4meerkatgram.domain.post.mapper.LikeMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,10 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
         @Transactional
         public boolean toggleLike(long userId, long postId) {
 
-            Like like = likeMapper.findByUserIdAndPostId(userId, postId);
+            LikeMyBatis like = likeMapper.findByUserIdAndPostId(userId, postId);
 
             if (like == null) {
-                Like newLike = Like.builder()
+                LikeMyBatis newLike = LikeMyBatis.builder()
                                    .userId(userId)
                                    .postId(postId)
                                    .build();

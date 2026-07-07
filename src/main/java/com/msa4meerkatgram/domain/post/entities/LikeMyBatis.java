@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class Like {
+public class LikeMyBatis {
     Long id;
     Long userId;
     Long postId;
