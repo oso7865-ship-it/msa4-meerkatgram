@@ -4,8 +4,14 @@ import com.msa4meerkatgram.domain.auth.requests.LoginRequest;
 import com.msa4meerkatgram.domain.auth.requests.RegistrationReq;
 import com.msa4meerkatgram.domain.auth.responses.AuthRes;
 import com.msa4meerkatgram.domain.auth.services.AuthService;
+import com.msa4meerkatgram.global.annotaions.openapi.ApiNotValidErrorResponse;
+import com.msa4meerkatgram.global.annotaions.openapi.ApiUnauthenticatedErrorResponse;
+import com.msa4meerkatgram.global.responses.GlobalErrorResponse;
 import com.msa4meerkatgram.global.responses.GlobalResponse;
 import io.jsonwebtoken.Claims;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -17,24 +23,31 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+// API를 기능별 또는 도메인별로 그룹화 할 때 사용
+@Tag(name = "인증 API", description = "인증 및 인가 담당")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class AuthController {
     private final AuthService authService;
 
+    @Operation(summary = "로그인 처리", description = "이메일과 비밀번호로 로그인")
+    @ApiResponse(responseCode = "200", description = "로그인 성공")
+    @ApiNotValidErrorResponse
+    @ApiUnauthenticatedErrorResponse
     @PostMapping("/login")
     public ResponseEntity<GlobalResponse<AuthRes>> login(
             @Valid @RequestBody LoginRequest loginRequest
             , HttpServletResponse response
     ){
-        return ResponseEntity.status(200).body(
-            GlobalResponse.<AuthRes>builder()
-                .code("00")
-                .message("로그인 성공")
-                .data(authService.login(response, loginRequest))
-                .build()
-        );
+        // return ResponseEntity.status(200).body(
+        //     GlobalResponse.<AuthRes>builder()
+        //         .code("00")
+        //         .message("로그인 성공")
+        //         .data(authService.login(response, loginRequest))
+        //         .build()
+        // );
+        return ResponseEntity.ok(GlobalResponse.from("00","로그인성공",authService.login(response, loginRequest)));
     }
 
     @PostMapping("/reissue-token")
@@ -42,41 +55,44 @@ public class AuthController {
             HttpServletRequest request
             ,HttpServletResponse response
     ) {
-        return ResponseEntity.status(200).body(
-            GlobalResponse.<AuthRes>builder()
-                .code("00")
-                .message("토큰 재발급 완료")
-                .data(authService.reissue(request, response))
-                .build()
-        );
+        // return ResponseEntity.status(200).body(
+        //     GlobalResponse.<AuthRes>builder()
+        //         .code("00")
+        //         .message("토큰 재발급 완료")
+        //         .data(authService.reissue(request, response))
+        //         .build()
+        // );
+        return ResponseEntity.ok(GlobalResponse.from("00","토큰 재발급 완료",authService.reissue(request, response)));
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<GlobalResponse<String>> logout(
+    public ResponseEntity<GlobalErrorResponse> logout(
         HttpServletResponse response
         , @AuthenticationPrincipal Claims claims
     ) {
         authService.logout(response, Long.parseLong(claims.getSubject()));
 
-        return ResponseEntity.status(200).body(
-            GlobalResponse.<String>builder()
-                .code("00")
-                .message("로그아웃 완료")
-                .build()
-        );
+        // return ResponseEntity.status(200).body(
+        //     GlobalResponse.<String>builder()
+        //         .code("00")
+        //         .message("로그아웃 완료")
+        //         .build()
+        // );
+        return ResponseEntity.ok(GlobalErrorResponse.from("00","로그아웃 완료"));
     }
     @PostMapping("/registration")
-    public ResponseEntity<GlobalResponse<String>> registration(
+    public ResponseEntity<GlobalErrorResponse> registration(
         @Valid @RequestBody RegistrationReq registrationReq
     ) {
         authService.registration(registrationReq);
 
-        return ResponseEntity.status(200).body(
-            GlobalResponse.<String>builder()
-                .code("00")
-                .message("회원가입 완료")
-                .build()
-        );
+        // return ResponseEntity.status(200).body(
+        //     GlobalResponse.<String>builder()
+        //         .code("00")
+        //         .message("회원가입 완료")
+        //         .build()
+        // );
+        return ResponseEntity.ok(GlobalErrorResponse.from("00","회원가입 완료"));
     }
 
 }

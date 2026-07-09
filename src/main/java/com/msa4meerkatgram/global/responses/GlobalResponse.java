@@ -1,12 +1,13 @@
 package com.msa4meerkatgram.global.responses;
 
-import lombok.Builder;
-import lombok.Getter;
 
-@Getter
-@Builder
-public class GlobalResponse<T> {
-    private String code;
-    private String message;
-    private T data;
+
+public record GlobalResponse<T> (
+    String code,
+    String message,
+    T data
+) {
+    public static <T> GlobalResponse<T> from(String code, String message, T data){
+        return new GlobalResponse<>(code,message,data);
+    }
 }
