@@ -7,8 +7,15 @@ import java.util.List;
 
 @Builder
 public record PostIndexResponse(
-    long total,
+    Long total,
     boolean lastPage,
-    List<Post> posts
+    List<PostWithUserRes> posts
 ) {
+    public static PostIndexResponse from (Long total, boolean lastPage, List<Post> posts) {
+        return new PostIndexResponse(
+            total,
+            lastPage,
+            posts.stream().map(PostWithUserRes::from).toList()
+        );
+    }
 }

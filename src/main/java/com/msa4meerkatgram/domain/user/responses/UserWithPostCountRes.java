@@ -6,10 +6,10 @@ import lombok.Builder;
 @Builder
 public record UserWithPostCountRes(
     UserRes userRes,
-    long countPosts
+    Long countPosts
 ) {
 
-    public static UserWithPostCountRes from (User user, long countPost) {
+    public static UserWithPostCountRes from (User user, Long countPost) {
         return new UserWithPostCountRes(
             UserRes.from(user),
             countPost

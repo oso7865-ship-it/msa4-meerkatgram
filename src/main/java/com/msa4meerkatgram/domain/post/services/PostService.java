@@ -3,7 +3,10 @@ package com.msa4meerkatgram.domain.post.services;
 import com.msa4meerkatgram.domain.file.responses.FileRes;
 import com.msa4meerkatgram.domain.file.service.FileService;
 import com.msa4meerkatgram.domain.post.entities.Post;
+import com.msa4meerkatgram.domain.post.repositories.PostQueryRepository;
 import com.msa4meerkatgram.domain.post.repositories.PostRepository;
+import com.msa4meerkatgram.domain.post.requests.PostIndexRequest;
+import com.msa4meerkatgram.domain.post.responses.PostIndexResponse;
 import com.msa4meerkatgram.domain.post.responses.PostWithUserRes;
 import com.msa4meerkatgram.domain.user.entities.User;
 import com.msa4meerkatgram.domain.user.repositories.UserRepository;
@@ -14,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -21,23 +26,18 @@ public class PostService {
     private final FileService fileService;
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final PostQueryRepository postQueryRepository;
 
-    // public PostIndexResponse index(PostIndexRequest postIndexRequest) {
-    //     int offset = (postIndexRequest.page() - 1) * postIndexRequest.limit();
-    //     // 특정 페이지 게시글 조회
-    //     List<Post> posts = postRepository.findAll();
-    //
-    //     // 토탈 획득
-    //     long total = postMapper.getTotal();
-    //     boolean lastPage = offset + postIndexRequest.limit() >= total;
-    //
-    //     // 컨트롤러 전달
-    //     return PostIndexResponse.builder()
-    //        .total(total)
-    //        .lastPage(lastPage)
-    //        .posts(posts)
-    //        .build();
-    // }
+    public PostIndexResponse index(PostIndexRequest postIndexRequest) {
+        int offset = (postIndexRequest.page() - 1) * postIndexRequest.limit();
+        // 특정 페이지 게시글 조회
+        List<Post> result = postQueryRepository.pagination(offset, postIndexRequest.limit());
+        // 토탈 획득
+        long total = postRepository.count();
+        boolean lastPage = offset + postIndexRequest.limit() >= total;
+        // 컨트롤러 전달
+        return PostIndexResponse.from(total, lastPage, result);
+    }
 
 
     public PostWithUserRes show(Long id) {

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Builder
 public record UserRes(
-         long id,
+         Long id,
          String email,
          String nick,
          RolePolicy role,

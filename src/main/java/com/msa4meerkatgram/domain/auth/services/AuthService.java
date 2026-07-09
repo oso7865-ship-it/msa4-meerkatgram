@@ -37,7 +37,7 @@ public class AuthService {
         // 유저정보 흭득
         User user = authRepository.findByEmail(loginRequest.email())
                                   .orElseThrow(() -> new NotRegisteredException("아이디와 비밀번호를 확인해주세요"));
-            ;
+
 
         // 비밀번호 체크
         if (!passwordEncoder.matches(loginRequest.password(), user.getPassword())){
