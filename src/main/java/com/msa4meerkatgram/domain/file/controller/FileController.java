@@ -23,25 +23,13 @@ public class FileController {
     public ResponseEntity<GlobalResponse<FileRes>> storeProfile(
         @ModelAttribute MultipartFile file
     ) {
-       return ResponseEntity.status(200).body(
-           GlobalResponse.<FileRes>builder()
-               .code("00")
-               .message("파일 저장 성공")
-               .data(fileService.storeProfile(file))
-               .build()
-       );
+       return GlobalResponse.success(fileService.storeProfile(file));
     }
 
     @PostMapping("/files/posts")
     public ResponseEntity<GlobalResponse<FileRes>> storePosts(
         @ModelAttribute MultipartFile file
     ) {
-        return ResponseEntity.status(200).body(
-            GlobalResponse.<FileRes>builder()
-                .code("00")
-                .message("파일 저장 성공")
-                .data(fileService.storePosts(file))
-                .build()
-        );
+        return GlobalResponse.success(fileService.storePosts(file));
     }
 }

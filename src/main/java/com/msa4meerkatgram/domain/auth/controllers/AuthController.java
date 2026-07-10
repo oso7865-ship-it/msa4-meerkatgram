@@ -6,7 +6,6 @@ import com.msa4meerkatgram.domain.auth.responses.AuthRes;
 import com.msa4meerkatgram.domain.auth.services.AuthService;
 import com.msa4meerkatgram.global.annotaions.openapi.ApiNotValidErrorResponse;
 import com.msa4meerkatgram.global.annotaions.openapi.ApiUnauthenticatedErrorResponse;
-import com.msa4meerkatgram.global.responses.GlobalErrorResponse;
 import com.msa4meerkatgram.global.responses.GlobalResponse;
 import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,14 +39,7 @@ public class AuthController {
             @Valid @RequestBody LoginRequest loginRequest
             , HttpServletResponse response
     ){
-        // return ResponseEntity.status(200).body(
-        //     GlobalResponse.<AuthRes>builder()
-        //         .code("00")
-        //         .message("로그인 성공")
-        //         .data(authService.login(response, loginRequest))
-        //         .build()
-        // );
-        return ResponseEntity.ok(GlobalResponse.from("00","로그인성공",authService.login(response, loginRequest)));
+        return GlobalResponse.success(authService.login(response, loginRequest));
     }
 
     @PostMapping("/reissue-token")
@@ -55,44 +47,23 @@ public class AuthController {
             HttpServletRequest request
             ,HttpServletResponse response
     ) {
-        // return ResponseEntity.status(200).body(
-        //     GlobalResponse.<AuthRes>builder()
-        //         .code("00")
-        //         .message("토큰 재발급 완료")
-        //         .data(authService.reissue(request, response))
-        //         .build()
-        // );
-        return ResponseEntity.ok(GlobalResponse.from("00","토큰 재발급 완료",authService.reissue(request, response)));
+        return GlobalResponse.success(authService.reissue(request, response));
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<GlobalErrorResponse> logout(
+    public ResponseEntity<GlobalResponse<Void>> logout(
         HttpServletResponse response
         , @AuthenticationPrincipal Claims claims
     ) {
         authService.logout(response, Long.parseLong(claims.getSubject()));
-
-        // return ResponseEntity.status(200).body(
-        //     GlobalResponse.<String>builder()
-        //         .code("00")
-        //         .message("로그아웃 완료")
-        //         .build()
-        // );
-        return ResponseEntity.ok(GlobalErrorResponse.from("00","로그아웃 완료"));
+        return GlobalResponse.success();
     }
     @PostMapping("/registration")
-    public ResponseEntity<GlobalErrorResponse> registration(
+    public ResponseEntity<GlobalResponse<Void>> registration(
         @Valid @RequestBody RegistrationReq registrationReq
     ) {
         authService.registration(registrationReq);
-
-        // return ResponseEntity.status(200).body(
-        //     GlobalResponse.<String>builder()
-        //         .code("00")
-        //         .message("회원가입 완료")
-        //         .build()
-        // );
-        return ResponseEntity.ok(GlobalErrorResponse.from("00","회원가입 완료"));
+        return GlobalResponse.success();
     }
 
 }

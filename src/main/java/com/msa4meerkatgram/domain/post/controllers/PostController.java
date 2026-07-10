@@ -18,39 +18,25 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
- @Tag(name = "게시글 API", description = "게시글 관련")
+@Tag(name = "게시글 API", description = "게시글 관련")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
 public class PostController {
     private final PostService postService;
 
-    @ApiResponse(responseCode = "200", description = "게시글 목록 흭득 성공")
+    @ApiResponse(responseCode = "200", description = "게시글 목록 조회 성공")
     @ApiNotValidErrorResponse
     @GetMapping("/posts")
     public ResponseEntity<GlobalResponse<PostIndexResponse>> index(PostIndexRequest postIndexRequest) {
-        PostIndexResponse postIndexResponse = postService.index(postIndexRequest);
-        return ResponseEntity.status(200).body(
-            GlobalResponse.<PostIndexResponse>builder()
-               .code("00")
-               .message("정상처리")
-               .data(postIndexResponse)
-               .build()
-        );
+        return GlobalResponse.success(postService.index(postIndexRequest));
     }
 
     @GetMapping("/posts/{id}")
     public ResponseEntity<GlobalResponse<PostWithUserRes>> show(
         @Parameter(description = "게시글 번호", example = "1") @Min(value = 1, message = "1이상 숫자만 허용합니다.") @PathVariable long id
     ) {
-        PostWithUserRes result = postService.show(id);
-        return ResponseEntity.status(200).body(
-            GlobalResponse.<PostWithUserRes>builder()
-                .code("00")
-                .message("정상처리")
-                .data(result)
-                .build()
-        );
+        return GlobalResponse.success(postService.show(id));
     }
 
     @PostMapping("/postCreate")
@@ -63,13 +49,7 @@ public class PostController {
 
         postService.postCreates(content, userId, file);
 
-        return ResponseEntity.ok(
-            GlobalResponse.<PostCreateReq>builder()
-                .code("00")
-                .message("정상처리")
-                .data(null)
-                .build()
-        );
+        return GlobalResponse.success(null);
     }
     @DeleteMapping("/postDelete/{postId}")
     public ResponseEntity<GlobalResponse<Void>> deletePost(
@@ -80,13 +60,7 @@ public class PostController {
 
         postService.deletePost(postId, userId);
 
-        return ResponseEntity.ok(
-            GlobalResponse.<Void>builder()
-                .code("00")
-                .message("정상처리")
-                .data(null)
-                .build()
-        );
+        return GlobalResponse.success();
     }
 
 }
