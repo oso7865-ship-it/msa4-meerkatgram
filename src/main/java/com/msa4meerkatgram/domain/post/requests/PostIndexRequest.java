@@ -4,11 +4,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 
 public record PostIndexRequest(
-    @Schema(description = "페이지 번호", examples = "1", nullable = false, requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "페이지 번호", examples = "1", nullable = false, requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     @Min(value = 1, message = "1이상 숫자만 허용합니다.")
     Integer page,
 
-    @Schema(description = "게시글 제한 수", examples = "6", nullable = false, requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "게시글 제한 수", examples = "6", nullable = false, requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     @Min(value = 1, message = "1이상 숫자만 허용합니다.")
     Integer limit
 ) {
